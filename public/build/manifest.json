@@ -1,0 +1,235 @@
+{
+  "node_modules/@fontsource-variable/vazirmatn/files/vazirmatn-arabic-wght-normal.woff2": {
+    "file": "assets/vazirmatn-arabic-wght-normal-59GBIImt.woff2",
+    "src": "node_modules/@fontsource-variable/vazirmatn/files/vazirmatn-arabic-wght-normal.woff2"
+  },
+  "node_modules/@fontsource-variable/vazirmatn/files/vazirmatn-latin-ext-wght-normal.woff2": {
+    "file": "assets/vazirmatn-latin-ext-wght-normal-tDTa1Fj6.woff2",
+    "src": "node_modules/@fontsource-variable/vazirmatn/files/vazirmatn-latin-ext-wght-normal.woff2"
+  },
+  "node_modules/@fontsource-variable/vazirmatn/files/vazirmatn-latin-wght-normal.woff2": {
+    "file": "assets/vazirmatn-latin-wght-normal-BFexNX-K.woff2",
+    "src": "node_modules/@fontsource-variable/vazirmatn/files/vazirmatn-latin-wght-normal.woff2"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.eot": {
+    "file": "assets/fa-brands-400-DNXCI7vV.eot",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.eot"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.svg": {
+    "file": "assets/fa-brands-400-oFLvx_U2.svg",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.svg"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf": {
+    "file": "assets/fa-brands-400-BMj94tJl.ttf",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff": {
+    "file": "assets/fa-brands-400-CwMhTPFj.woff",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff2": {
+    "file": "assets/fa-brands-400-UEZeU8cs.woff2",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff2"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.eot": {
+    "file": "assets/fa-regular-400-azyMXj7c.eot",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.eot"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.svg": {
+    "file": "assets/fa-regular-400-CLGGrRKN.svg",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.svg"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.ttf": {
+    "file": "assets/fa-regular-400-RK6M3Auz.ttf",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.ttf"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff": {
+    "file": "assets/fa-regular-400-DtFYXIM2.woff",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2": {
+    "file": "assets/fa-regular-400-DK7qvToU.woff2",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.eot": {
+    "file": "assets/fa-solid-900-B6e-Hhi-.eot",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.eot"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.svg": {
+    "file": "assets/fa-solid-900-CcuCRYoc.svg",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.svg"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.ttf": {
+    "file": "assets/fa-solid-900-CWs4lwq8.ttf",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.ttf"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff": {
+    "file": "assets/fa-solid-900-BiAi1MSV.woff",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2": {
+    "file": "assets/fa-solid-900-C19_HPqg.woff2",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2"
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-SolzFgLQ.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "dynamicImports": [
+      "resources/js/pages/admin/Dashboard.vue",
+      "resources/js/pages/admin/Partners.vue",
+      "resources/js/pages/admin/Requests.vue",
+      "resources/js/pages/admin/Deposits.vue",
+      "resources/js/pages/admin/Invoices.vue",
+      "resources/js/pages/admin/Announcements.vue",
+      "resources/js/pages/admin/Tutorials.vue",
+      "resources/js/pages/admin/Tickets.vue",
+      "resources/js/pages/admin/Users.vue",
+      "resources/js/pages/admin/Settings.vue"
+    ],
+    "css": [
+      "assets/app-BAdl9tZn.css"
+    ],
+    "assets": [
+      "assets/vazirmatn-arabic-wght-normal-59GBIImt.woff2",
+      "assets/vazirmatn-latin-ext-wght-normal-tDTa1Fj6.woff2",
+      "assets/vazirmatn-latin-wght-normal-BFexNX-K.woff2",
+      "assets/fa-brands-400-DNXCI7vV.eot",
+      "assets/fa-brands-400-UEZeU8cs.woff2",
+      "assets/fa-brands-400-CwMhTPFj.woff",
+      "assets/fa-brands-400-BMj94tJl.ttf",
+      "assets/fa-brands-400-oFLvx_U2.svg",
+      "assets/fa-regular-400-azyMXj7c.eot",
+      "assets/fa-regular-400-DK7qvToU.woff2",
+      "assets/fa-regular-400-DtFYXIM2.woff",
+      "assets/fa-regular-400-RK6M3Auz.ttf",
+      "assets/fa-regular-400-CLGGrRKN.svg",
+      "assets/fa-solid-900-B6e-Hhi-.eot",
+      "assets/fa-solid-900-C19_HPqg.woff2",
+      "assets/fa-solid-900-BiAi1MSV.woff",
+      "assets/fa-solid-900-CWs4lwq8.ttf",
+      "assets/fa-solid-900-CcuCRYoc.svg"
+    ]
+  },
+  "resources/js/pages/admin/Announcements.vue": {
+    "file": "assets/Announcements-5VJzKRHL.js",
+    "name": "Announcements",
+    "src": "resources/js/pages/admin/Announcements.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "css": [
+      "assets/Announcements-DtaFGoIJ.css"
+    ]
+  },
+  "resources/js/pages/admin/Dashboard.vue": {
+    "file": "assets/Dashboard-B9UjYCEy.js",
+    "name": "Dashboard",
+    "src": "resources/js/pages/admin/Dashboard.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "css": [
+      "assets/Dashboard-DF6s1Ewf.css"
+    ]
+  },
+  "resources/js/pages/admin/Deposits.vue": {
+    "file": "assets/Deposits-D4WrNlXD.js",
+    "name": "Deposits",
+    "src": "resources/js/pages/admin/Deposits.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "css": [
+      "assets/Deposits-CTLhwL71.css"
+    ]
+  },
+  "resources/js/pages/admin/Invoices.vue": {
+    "file": "assets/Invoices-Dk40f88c.js",
+    "name": "Invoices",
+    "src": "resources/js/pages/admin/Invoices.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "css": [
+      "assets/Invoices-C-D7KPA6.css"
+    ]
+  },
+  "resources/js/pages/admin/Partners.vue": {
+    "file": "assets/Partners-Dhqv9leh.js",
+    "name": "Partners",
+    "src": "resources/js/pages/admin/Partners.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "css": [
+      "assets/Partners-C4x6TTWS.css"
+    ]
+  },
+  "resources/js/pages/admin/Requests.vue": {
+    "file": "assets/Requests-Dd2JdBj8.js",
+    "name": "Requests",
+    "src": "resources/js/pages/admin/Requests.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "css": [
+      "assets/Requests-D5CApgW7.css"
+    ]
+  },
+  "resources/js/pages/admin/Settings.vue": {
+    "file": "assets/Settings-CQ6_Q_6G.js",
+    "name": "Settings",
+    "src": "resources/js/pages/admin/Settings.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "css": [
+      "assets/Settings-BKBdkDMn.css"
+    ]
+  },
+  "resources/js/pages/admin/Tickets.vue": {
+    "file": "assets/Tickets-D8NU2gt2.js",
+    "name": "Tickets",
+    "src": "resources/js/pages/admin/Tickets.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "css": [
+      "assets/Tickets-g2MxkTmA.css"
+    ]
+  },
+  "resources/js/pages/admin/Tutorials.vue": {
+    "file": "assets/Tutorials-BJfgNqrZ.js",
+    "name": "Tutorials",
+    "src": "resources/js/pages/admin/Tutorials.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "css": [
+      "assets/Tutorials-CxlgXRIr.css"
+    ]
+  },
+  "resources/js/pages/admin/Users.vue": {
+    "file": "assets/Users-D3diKgIA.js",
+    "name": "Users",
+    "src": "resources/js/pages/admin/Users.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "css": [
+      "assets/Users-CanU49LN.css"
+    ]
+  }
+}

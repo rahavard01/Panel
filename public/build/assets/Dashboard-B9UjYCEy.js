@@ -1,0 +1,1 @@
+import{_ as e,c as o,a,o as t}from"./app-SolzFgLQ.js";const r={class:"section-wrap"},c={__name:"Dashboard",setup(_){return(d,s)=>(t(),o("div",r,s[0]||(s[0]=[a("div",{style:{"font-size":"18px",color:"#bdbdbd"}},"... در حال آماده‌سازی",-1)])))}},p=e(c,[["__scopeId","data-v-a7ff4ec6"]]);export{p as default};

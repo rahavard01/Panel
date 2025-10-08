@@ -1,0 +1,74 @@
+# ================= OS & Editor junk =================
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# ================= Env files =================
+.env
+.env.*
+!.env.example
+
+# ================= Composer / PHP =================
+/vendor
+/.phpunit.cache
+.phpunit.result.cache
+/.phpactor.json
+/.php-cs-fixer.cache
+/.phpstorm.meta.php
+
+# ================= Laravel caches =================
+/bootstrap/cache/*
+!/bootstrap/cache/.gitignore
+
+# ================= Storage (skeleton only) =================
+/storage/**
+!/storage/
+!/storage/**/
+!/storage/.gitignore
+!/storage/**/.gitignore
+
+# ================= Frontend =================
+/node_modules
+/.vite
+/public/hot
+/resources/js/**
+/resources/css/**
+/public/assets
+/public/assets/**
+
+# ================= App data / symlinks =================
+/public/storage
+/storage/pail
+
+# ================= IDE / Project settings =================
+/.fleet
+/.idea
+/.vscode
+/.nova
+/.zed
+
+# ================= Logs =================
+*.log
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ================= Homestead / Vagrant =================
+Homestead.json
+Homestead.yaml
+
+# ================= Misc =================
+/coverage
+/database/*.sqlite
+
+/public/build/**/*.map
+
+/public/mix-manifest.json
+
+desktop.ini
+
+yarn.lock
+pnpm-lock.yaml
+
+/.eslintcache
