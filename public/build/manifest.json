@@ -72,7 +72,7 @@
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2"
   },
   "resources/js/app.js": {
-    "file": "assets/app-DPZTFWU6.js",
+    "file": "assets/app-dhSg_Uc3.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -113,7 +113,7 @@
     ]
   },
   "resources/js/pages/admin/Announcements.vue": {
-    "file": "assets/Announcements-BwdKost2.js",
+    "file": "assets/Announcements-Cz9eR_Gx.js",
     "name": "Announcements",
     "src": "resources/js/pages/admin/Announcements.vue",
     "isDynamicEntry": true,
@@ -125,7 +125,7 @@
     ]
   },
   "resources/js/pages/admin/Dashboard.vue": {
-    "file": "assets/Dashboard-Ci9dGQJ_.js",
+    "file": "assets/Dashboard-0M6f0j9O.js",
     "name": "Dashboard",
     "src": "resources/js/pages/admin/Dashboard.vue",
     "isDynamicEntry": true,
@@ -137,7 +137,7 @@
     ]
   },
   "resources/js/pages/admin/Deposits.vue": {
-    "file": "assets/Deposits-CKK5ObBs.js",
+    "file": "assets/Deposits-BemuUwFc.js",
     "name": "Deposits",
     "src": "resources/js/pages/admin/Deposits.vue",
     "isDynamicEntry": true,
@@ -149,7 +149,7 @@
     ]
   },
   "resources/js/pages/admin/Invoices.vue": {
-    "file": "assets/Invoices-DRg8p1yc.js",
+    "file": "assets/Invoices-SgZ1ysqp.js",
     "name": "Invoices",
     "src": "resources/js/pages/admin/Invoices.vue",
     "isDynamicEntry": true,
@@ -161,7 +161,7 @@
     ]
   },
   "resources/js/pages/admin/Partners.vue": {
-    "file": "assets/Partners-Bw3QDiCS.js",
+    "file": "assets/Partners-D4tS5_Zl.js",
     "name": "Partners",
     "src": "resources/js/pages/admin/Partners.vue",
     "isDynamicEntry": true,
@@ -173,7 +173,7 @@
     ]
   },
   "resources/js/pages/admin/Requests.vue": {
-    "file": "assets/Requests-DxJv65qf.js",
+    "file": "assets/Requests-mVIkWwiJ.js",
     "name": "Requests",
     "src": "resources/js/pages/admin/Requests.vue",
     "isDynamicEntry": true,
@@ -185,7 +185,7 @@
     ]
   },
   "resources/js/pages/admin/Settings.vue": {
-    "file": "assets/Settings-D42F5iah.js",
+    "file": "assets/Settings-C_Qk4OPM.js",
     "name": "Settings",
     "src": "resources/js/pages/admin/Settings.vue",
     "isDynamicEntry": true,
@@ -197,7 +197,7 @@
     ]
   },
   "resources/js/pages/admin/Tickets.vue": {
-    "file": "assets/Tickets-0kwTlWo-.js",
+    "file": "assets/Tickets-DPFwxsWx.js",
     "name": "Tickets",
     "src": "resources/js/pages/admin/Tickets.vue",
     "isDynamicEntry": true,
@@ -209,7 +209,7 @@
     ]
   },
   "resources/js/pages/admin/Tutorials.vue": {
-    "file": "assets/Tutorials-s0Pp-yxD.js",
+    "file": "assets/Tutorials-CHDrp9EH.js",
     "name": "Tutorials",
     "src": "resources/js/pages/admin/Tutorials.vue",
     "isDynamicEntry": true,
@@ -221,7 +221,7 @@
     ]
   },
   "resources/js/pages/admin/Users.vue": {
-    "file": "assets/Users-BvwkAcwq.js",
+    "file": "assets/Users-DKYIYmVA.js",
     "name": "Users",
     "src": "resources/js/pages/admin/Users.vue",
     "isDynamicEntry": true,
