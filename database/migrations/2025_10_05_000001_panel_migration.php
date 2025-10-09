@@ -244,7 +244,7 @@ return new class extends Migration {
             $table->index(['commission_tx_id'], 'panel_wallet_receipts_commission_tx_id_foreign');
         });
 
-        DB::table('panel_bot_settings')->insert(['enabled' => 1, 'notify_on_card_submit' => 1, 'allow_approve_via_telegram' => 1, 'use_photo' => 0, 'message_template' => '🧾 کارت‌به‌کارت\nشماره رسید: {id}\nکاربر: {user_code}\nمبلغ: {amount} تومان\nزمان: {created_at}']);
+        DB::table('panel_bot_settings')->insert(['enabled' => 1, 'notify_on_card_submit' => 1, 'allow_approve_via_telegram' => 1, 'use_photo' => 0, 'message_template' => "🧾 کارت‌به‌کارت\nشماره رسید: {id}\nکاربر: {user_code}\nمبلغ: {amount} تومان\nزمان: {created_at}"]);
         DB::table('panel_plan')->insert(['name' => 'اکانت تست', 'plan_key' => 'test', 'enable' => 1, 'default_price' => '', 'v2_plan_id' => null, 'details' => '']);
         DB::table('panel_plan')->insert(['name' => 'اکانت یک‌ ماهه', 'plan_key' => '1m', 'enable' => 1, 'default_price' => '', 'v2_plan_id' => null, 'details' => '']);
         DB::table('panel_plan')->insert(['name' => 'اکانت سه‌ ماهه', 'plan_key' => '3m', 'enable' => 1, 'default_price' => '', 'v2_plan_id' => null, 'details' => '']);
