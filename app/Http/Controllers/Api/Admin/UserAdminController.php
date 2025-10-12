@@ -79,6 +79,49 @@ class UserAdminController extends Controller
             $errors  = $result['errors']  ?? [];
 
             DB::commit();
+            // === [ADD] لاگ تراکنش برای «خرید اکانت» توسط ادمین ===
+            try {
+                $me = $request->user();
+                $panelUserId = (int) ($me->id ?? 0);
+                $creditNow = (int) DB::table('panel_users')->where('id', $panelUserId)->value('credit');
+
+                // استخراج آیدی‌ها از $created
+                $extractId = function ($item) {
+                    if (is_array($item)) {
+                        if (!empty($item['id'])) return (int)$item['id'];
+                        if (!empty($item['user']['id'])) return (int)$item['user']['id'];
+                    }
+                    return null;
+                };
+                $userIds = [];
+                foreach ((array)$created as $it) {
+                    $id = $extractId($it);
+                    if ($id) $userIds[] = $id;
+                }
+
+                /** @var \App\Services\TransactionLogger $logger */
+                $logger = app(\App\Services\TransactionLogger::class);
+                $trxId = $logger->start([
+                    'panel_user_id'   => $panelUserId,
+                    'type'            => 'account_purchase',
+                    'direction'       => 'debit',
+                    'amount'          => 0, // ساخت ادمینی؛ بدون کسر کیف‌پول
+                    'balance_before'  => $creditNow,
+                    'balance_after'   => $creditNow,
+                    'quantity'        => max(count($userIds), 1),
+                    'meta'            => ['panel_code' => $data['panel_code'] ?? null],
+                ]);
+                if ($trxId) {
+                    $logger->finalize($trxId, [
+                        'reference_type' => 'v2_user',
+                        'reference_id'   => (count($userIds) === 1) ? $userIds[0] : null,
+                        'user_ids'       => $userIds,
+                    ]);
+                }
+            } catch (\Throwable $e) {
+                // لاگ اختیاری است؛ خطا روی پاسخ اصلی اثر نداشته باشد
+            }
+
         } catch (\Throwable $e) {
             DB::rollBack();
             return response()->json(['status'=>'error','message'=>'ساخت کاربر ناموفق بود'], 500);
@@ -297,6 +340,38 @@ class UserAdminController extends Controller
             DB::table('v2_user')->where('email', $email)->update($update);
 
             DB::commit();
+            // === [ADD] لاگ تراکنش برای «تمدید اکانت» توسط ادمین ===
+            try {
+                $me = $request->user();
+                $panelUserId = (int) ($me->id ?? 0);
+                $creditNow   = (int) DB::table('panel_users')->where('id', $panelUserId)->value('credit');
+
+                /** @var \App\Services\TransactionLogger $logger */
+                $logger = app(\App\Services\TransactionLogger::class);
+                $trxId = $logger->start([
+                    'panel_user_id'   => $panelUserId,
+                    'type'            => 'account_extend',
+                    'direction'       => 'debit',
+                    'amount'          => 0,
+                    'balance_before'  => $creditNow,
+                    'balance_after'   => $creditNow,
+                    'quantity'        => 1,
+                    'meta'            => [
+                        'panel_code'      => $me->code ?? null,
+                    ],
+                ]);
+                if ($trxId) {
+                    $logger->finalize($trxId, [
+                        'reference_type'  => 'v2_user',
+                        'reference_id'    => (int)$user->id,
+                        'user_ids'        => [(int)$user->id],
+                        'extra_meta'      => [
+                            'plan_key_before' => $beforePlanKey ?? null,
+                            'plan_key_after'  => $period,
+                        ],
+                    ]);
+                }
+            } catch (\Throwable $e) {}
 
             return response()->json([
                 'status'     => 'ok',

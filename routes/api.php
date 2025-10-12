@@ -27,6 +27,8 @@ use App\Http\Controllers\Api\Admin\CommissionAdminController;
 use App\Http\Controllers\Api\Admin\BotAdminController;
 use App\Http\Controllers\Api\Admin\UserAdminController;
 use App\Http\Controllers\Api\Auth\PasswordResetController;
+use App\Http\Controllers\Api\Admin\DashboardAdminController;
+use App\Http\Controllers\Api\DashboardPanelController;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,6 +70,7 @@ Route::middleware(['auth:sanctum', CheckTokenExpiration::class, CheckUserBanned:
     Route::post('/users/topup', [V2UserController::class, 'topup']);
     Route::post('/users/change-password', [PanelController::class, 'changePassword']);
     Route::post('/logout', [LoginController::class, 'logout']);
+    Route::get('/panel/dashboard/cards', [DashboardPanelController::class, 'cards']);
 
     // لیست نمایندگان من (approved | pending | rejected | all)
     Route::get('/panel/my-reps', [PanelRepsController::class, 'index']);
@@ -205,6 +208,8 @@ Route::middleware(['auth:sanctum', CheckTokenExpiration::class, CheckUserBanned:
 		
         // === Billing (Admin) — فهرست همه‌ی صورتحساب‌ها برای پنل ادمین ===
         Route::get('/transactions', [BillingController::class, 'all']);
+        // === Dashboard (Admin) 
+        Route::get('/dashboard/cards', [DashboardAdminController::class, 'cards']);
 
     });
 });
