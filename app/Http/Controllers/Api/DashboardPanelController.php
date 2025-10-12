@@ -48,7 +48,7 @@ class DashboardPanelController extends Controller
         $yEnd    = $nowTeh->copy()->startOfDay()->subSecond()->utc();
 
         $mStart  = $nowTeh->copy()->startOfMonth()->utc();
-        $mEnd    = $nowTeh->copy()->utc();
+        $mEnd    = $nowTeh->copy()->endOfDay()->utc();
 
         $pmStart = $nowTeh->copy()->startOfMonth()->subMonthNoOverflow()->startOfMonth()->utc();
         $pmEnd   = $nowTeh->copy()->startOfMonth()->subSecond()->utc();

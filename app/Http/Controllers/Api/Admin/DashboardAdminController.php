@@ -44,7 +44,7 @@ class DashboardAdminController extends Controller
 
         // Jalaali month (provided by FE; fallback to Gregorian month if FE missed)
         $m0 = $nowTeh->copy()->startOfMonth();
-        $m1 = $nowTeh->copy();
+        $m1 = $nowTeh->copy()->endOfDay();
         $pm0 = $m0->copy()->subMonthNoOverflow()->startOfMonth();
         $pm1 = $m0->copy()->subSecond();
 
