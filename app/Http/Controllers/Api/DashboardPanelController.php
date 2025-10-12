@@ -64,29 +64,39 @@ class DashboardPanelController extends Controller
         };
 
         // --- تراکنش‌ها (فقط مربوط به همین پنل) ---
-        $sumUserOps = function (string $type, Carbon $fromUtc, Carbon $toUtc) use ($T_TRX, $STATUS_SUCCESS, $betweenTs, $pid) {
+        $sumUserOps = function (string $type, Carbon $fromUtc, Carbon $toUtc) use ($T_TRX, $STATUS_SUCCESS, $betweenTs, $pid, $code) {
             try {
                 return (int) DB::table($T_TRX)
-                    ->where('panel_user_id', $pid)
                     ->where('type', $type)
                     ->where('status', $STATUS_SUCCESS)
+                    // اسکوپ: یا با id خود پنل، یا با code داخل متا
+                    ->where(function ($q) use ($pid, $code) {
+                        $q->where('panel_user_id', $pid)
+                        ->orWhereRaw("JSON_UNQUOTE(JSON_EXTRACT(meta,'$.panel_code')) = ?", [$code]);
+                    })
                     ->tap(fn($q) => $betweenTs($q, $fromUtc, $toUtc))
                     ->sum(DB::raw("COALESCE(JSON_LENGTH(JSON_EXTRACT(meta,'$.user_ids')), quantity, 1)"));
             } catch (\Throwable $e) {
                 return (int) DB::table($T_TRX)
-                    ->where('panel_user_id', $pid)
                     ->where('type', $type)
                     ->where('status', $STATUS_SUCCESS)
+                    ->where(function ($q) use ($pid, $code) {
+                        $q->where('panel_user_id', $pid)
+                        ->orWhereRaw("JSON_UNQUOTE(JSON_EXTRACT(meta,'$.panel_code')) = ?", [$code]);
+                    })
                     ->tap(fn($q) => $betweenTs($q, $fromUtc, $toUtc))
                     ->count();
             }
         };
 
-        $sumTopups = function (Carbon $fromUtc, Carbon $toUtc) use ($T_TRX, $STATUS_SUCCESS, $betweenTs, $pid, $TYPE_TOPUP) {
+        $sumTopups = function (Carbon $fromUtc, Carbon $toUtc) use ($T_TRX, $STATUS_SUCCESS, $betweenTs, $pid, $code, $TYPE_TOPUP) {
             return (int) DB::table($T_TRX)
-                ->where('panel_user_id', $pid)
                 ->where('type', $TYPE_TOPUP)
                 ->where('status', $STATUS_SUCCESS)
+                ->where(function ($q) use ($pid, $code) {
+                    $q->where('panel_user_id', $pid)
+                    ->orWhereRaw("JSON_UNQUOTE(JSON_EXTRACT(meta,'$.panel_code')) = ?", [$code]);
+                })
                 ->tap(fn($q) => $betweenTs($q, $fromUtc, $toUtc))
                 ->sum('amount');
         };
