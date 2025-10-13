@@ -30,6 +30,9 @@ class DashboardAdminController extends Controller
         $tz = $cfg['tz'] ?? 'Asia/Tehran';
         $presenceWindow = (int)($cfg['presence_window_sec'] ?? 60);
 
+        // Always do time math in UTC inside MySQL
+        DB::statement("SET time_zone = '+00:00'");
+
         // Now in Tehran (for boundaries / fallbacks)
         $nowTeh = Carbon::now($tz);
         $today0 = $nowTeh->copy()->startOfDay();
@@ -74,12 +77,9 @@ $pmEnd   = $pm1->copy()->utc();
         $colRef     = DB::getQueryGrammar()->wrap($createdCol);
         $tsExpr     = "UNIX_TIMESTAMP($colRef)";
 
-        $betweenTs = function ($q, Carbon $fromUtc, $toUtc) {
-            // Offset فعلی سرور نسبت به UTC (ثانیه)
-            $offsetSec = "TIMESTAMPDIFF(SECOND, UTC_TIMESTAMP(), NOW())";
-            // created_at را با کم کردن offset به UTC می‌بریم و بعد به epoch ثانیه تبدیل می‌کنیم
-            $epochUtc = "TIMESTAMPDIFF(SECOND, '1970-01-01 00:00:00', DATE_SUB(created_at, INTERVAL $offsetSec SECOND))";
-            return $q->whereRaw("$epochUtc BETWEEN ? AND ?", [$fromUtc->timestamp, $toUtc->timestamp]);
+        $betweenTs = function ($q, Carbon $fromUtc, Carbon $toUtc) use ($tsExpr) {
+            // inclusive range
+            return $q->whereRaw("$tsExpr BETWEEN ? AND ?", [$fromUtc->timestamp, $toUtc->timestamp]);
         };
 
         $pct = function (int|float $cur, int|float $prev): float {
