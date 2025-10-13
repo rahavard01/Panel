@@ -35,9 +35,6 @@ class DashboardPanelController extends Controller
         $pid  = (int)($me->id ?? 0);
         $code = (string)($me->code ?? '');
 
-        // همۀ محاسبات SQL در UTC
-        DB::statement("SET time_zone = '+00:00'");
-
         // مرزبندی زمانی (به وقت تهران)
         $nowTeh = Carbon::now($tz);
 
@@ -59,8 +56,12 @@ class DashboardPanelController extends Controller
             return round((($cur - $prev) / $prev) * 100, 2);
         };
 
-        $betweenTs = function ($q, Carbon $fromUtc, Carbon $toUtc) {
-            return $q->whereBetween(DB::raw('UNIX_TIMESTAMP(created_at)'), [$fromUtc->timestamp, $toUtc->timestamp]);
+        $betweenTs = function ($q, Carbon $fromUtc, $toUtc) {
+            // اختلاف فعلی سشن نسبت به UTC (ثانیه)
+            $offsetSec = "TIMESTAMPDIFF(SECOND, UTC_TIMESTAMP(), NOW())";
+            // created_at را به UTC می‌بریم و به epoch تبدیل می‌کنیم
+            $epochUtc = "TIMESTAMPDIFF(SECOND, '1970-01-01 00:00:00', DATE_SUB(created_at, INTERVAL $offsetSec SECOND))";
+            return $q->whereRaw("$epochUtc BETWEEN ? AND ?", [$fromUtc->timestamp, $toUtc->timestamp]);
         };
 
         // --- تراکنش‌ها (فقط مربوط به همین پنل) ---
