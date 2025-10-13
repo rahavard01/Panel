@@ -30,56 +30,44 @@ class DashboardAdminController extends Controller
         $tz = $cfg['tz'] ?? 'Asia/Tehran';
         $presenceWindow = (int)($cfg['presence_window_sec'] ?? 60);
 
-        // Always do time math in UTC inside MySQL
-        DB::statement("SET time_zone = '+00:00'");
-
-        // Now in Tehran (for boundaries / fallbacks)
+        // ===== Tehran-based boundaries, then convert to UTC for SQL =====
         $nowTeh = Carbon::now($tz);
         $today0 = $nowTeh->copy()->startOfDay();
         $today1 = $nowTeh->copy()->endOfDay();
 
-        // Gregorian prev day
         $y0 = $today0->copy()->subDay();
         $y1 = $today0->copy()->subSecond();
 
-        // Jalaali month (provided by FE; fallback to Gregorian month if FE missed)
-        $m0 = $nowTeh->copy()->startOfMonth();
-        $m1 = $nowTeh->copy()->endOfDay();
+        $m0  = $nowTeh->copy()->startOfMonth();
+        $m1  = $nowTeh->copy()->endOfDay();
         $pm0 = $m0->copy()->subMonthNoOverflow()->startOfMonth();
         $pm1 = $m0->copy()->subSecond();
 
-        // ---- Parse ISO/UTC coming from FE (we work in UTC everywhere in SQL) ----
-        $parseIsoUtc = function (?string $s): ?Carbon {
-            if (!$s) return null;
-            try { return Carbon::parse($s)->utc(); } catch (\Throwable $e) { return null; }
-        };
+        // Server-owned ranges (ignore FE to avoid mismatch)
+        $tStart  = $today0->copy()->utc();
+        $tEnd    = $today1->copy()->utc();
+        $yStart  = $y0->copy()->utc();
+        $yEnd    = $y1->copy()->utc();
+        $mStart  = $m0->copy()->utc();
+        $mEnd    = $m1->copy()->utc();
+        $pmStart = $pm0->copy()->utc();
+        $pmEnd   = $pm1->copy()->utc();
 
-// فقط امروز و دیروز را از فرانت قبول کن (اگر آمد)
-$tStart  = $parseIsoUtc($req->query('jtodayStart'))     ?: $today0->copy()->utc();
-$tEnd    = $parseIsoUtc($req->query('jtodayEnd'))       ?: $today1->copy()->utc();
-$yStart  = $parseIsoUtc($req->query('jyesterdayStart')) ?: $y0->copy()->utc();
-$yEnd    = $parseIsoUtc($req->query('jyesterdayEnd'))   ?: $y1->copy()->utc();
-
-// ماه جاری و ماه قبل همیشه توسط سرور تعیین شود
-$mStart  = $m0->copy()->utc();
-$mEnd    = $m1->copy()->utc();
-$pmStart = $pm0->copy()->utc();
-$pmEnd   = $pm1->copy()->utc();
-
-        // Safety: اگر ماه == امروز شد، در سرور تصحیح کن به ماه‌جاری واقعی
-        if ($mStart->isSameDay($tStart) && $mEnd->isSameDay($tEnd)) {
-            $mStart = $m0->copy()->utc();
-            $mEnd   = $m1->copy()->utc();
-        }
-
-        // ---- Reusable helpers ----
+        // ===== Helpers =====
         $createdCol = 'created_at';
         $colRef     = DB::getQueryGrammar()->wrap($createdCol);
-        $tsExpr     = "UNIX_TIMESTAMP($colRef)";
 
-        $betweenTs = function ($q, Carbon $fromUtc, Carbon $toUtc) use ($tsExpr) {
-            // inclusive range
-            return $q->whereRaw("$tsExpr BETWEEN ? AND ?", [$fromUtc->timestamp, $toUtc->timestamp]);
+        // Build a fixed offset string for Tehran (DST-safe; Iran has no DST now)
+        $offMin = Carbon::now($tz)->utcOffset(); // e.g., +210 for +03:30
+        $sign   = $offMin >= 0 ? '+' : '-';
+        $hh     = str_pad(intval(abs($offMin) / 60), 2, '0', STR_PAD_LEFT);
+        $mm     = str_pad(abs($offMin) % 60, 2, '0', STR_PAD_LEFT);
+        $offStr = "{$sign}{$hh}:{$mm}"; // like +03:30
+
+        // Compare created_at (stored as Tehran local time) after converting to UTC epoch
+        $betweenTs = function ($q, Carbon $fromUtc, Carbon $toUtc) use ($colRef, $offStr) {
+            $epochUtc = "TIMESTAMPDIFF(SECOND, '1970-01-01 00:00:00', CONVERT_TZ($colRef, '{$offStr}', '+00:00'))";
+            return $q->whereRaw("$epochUtc BETWEEN ? AND ?", [$fromUtc->timestamp, $toUtc->timestamp]);
         };
 
         $pct = function (int|float $cur, int|float $prev): float {
@@ -120,23 +108,20 @@ $pmEnd   = $pm1->copy()->utc();
         };
 
         // ---- Metrics ----
-        // New users (purchases)
         $nu_today = $sumUserOps($TYPE_PURCHASE, $tStart, $tEnd);
         $nu_yest  = $sumUserOps($TYPE_PURCHASE, $yStart, $yEnd);
         $nu_m     = $sumUserOps($TYPE_PURCHASE, $mStart, $mEnd);
         $nu_pm    = $sumUserOps($TYPE_PURCHASE, $pmStart, $pmEnd);
 
-        // Renewals
         $re_today = $sumUserOps($TYPE_RENEWAL, $tStart, $tEnd);
         $re_yest  = $sumUserOps($TYPE_RENEWAL, $yStart, $yEnd);
         $re_m     = $sumUserOps($TYPE_RENEWAL, $mStart, $mEnd);
         $re_pm    = $sumUserOps($TYPE_RENEWAL, $pmStart, $pmEnd);
 
-        // Deposits (IRT)
         $dep_m  = $sumDeposits($mStart, $mEnd);
         $dep_pm = $sumDeposits($pmStart, $pmEnd);
 
-        // Pending counters (cached very briefly)
+        // Pending counters (cached briefly)
         $pending = Cache::remember('dash:pending', 10, function () use ($T_RECEIPTS, $T_REFS, $STATUS_SUBMIT, $STATUS_REF) {
             return [
                 'deposits'        => (int) DB::table($T_RECEIPTS)->where('status', $STATUS_SUBMIT)->count(),
@@ -145,13 +130,13 @@ $pmEnd   = $pm1->copy()->utc();
         });
 
         // Panel status (cached briefly)
-        $panelStatus = Cache::remember('dash:panel', 10, function () use ($T_PUSERS, $T_USERS, $nowTeh, $presenceWindow) {
+        $panelStatus = Cache::remember('dash:panel', 10, function () use ($T_PUSERS, $T_USERS, $presenceWindow) {
             $nowUtc = Carbon::now('UTC');
-            $usersTotal   = (int) DB::table($T_USERS)->count();
-            $partnersTotal= (int) DB::table($T_PUSERS)->where('role', 2)->count();
-            $usersOnline  = (int) DB::table($T_USERS)->where('t', '>', $nowUtc->timestamp - $presenceWindow)->count();
-            $usersExpired = (int) DB::table($T_USERS)->where('expired_at', '>', 0)->where('expired_at', '<', $nowUtc->timestamp)->count();
-            return compact('partnersTotal','usersTotal','usersOnline','usersExpired');
+            $usersTotal    = (int) DB::table($T_USERS)->count();
+            $partnersTotal = (int) DB::table($T_PUSERS)->where('role', 2)->count();
+            $usersOnline   = (int) DB::table($T_USERS)->where('t', '>', $nowUtc->timestamp - $presenceWindow)->count();
+            $usersExpired  = (int) DB::table($T_USERS)->where('expired_at', '>', 0)->where('expired_at', '<', $nowUtc->timestamp)->count();
+            return compact('partnersTotal', 'usersTotal', 'usersOnline', 'usersExpired');
         });
 
         // ---- Response ----
@@ -181,7 +166,6 @@ $pmEnd   = $pm1->copy()->utc();
 
             'meta' => [
                 'generatedAt' => $nowTeh->toIso8601String(),
-                // Debug: UTC ranges actually used:
                 'ranges' => [
                     'today'     => ['from'=>$tStart->toIso8601String(),'to'=>$tEnd->toIso8601String()],
                     'yesterday' => ['from'=>$yStart->toIso8601String(),'to'=>$yEnd->toIso8601String()],

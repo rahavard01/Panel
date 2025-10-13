@@ -14,10 +14,10 @@ class DashboardPanelController extends Controller
     {
         // ===== پایه =====
         $cfg = config('dashboard');
-        $T_USERS    = $cfg['tables']['users']              ?? 'v2_user';
-        $T_PUSERS   = $cfg['tables']['panel_users']        ?? 'panel_users';
-        $T_TRX      = $cfg['tables']['transactions']       ?? 'panel_transactions';
-        $T_RECEIPTS = $cfg['tables']['wallet_receipts']    ?? 'panel_wallet_receipts';
+        $T_USERS    = $cfg['tables']['users']           ?? 'v2_user';
+        $T_PUSERS   = $cfg['tables']['panel_users']     ?? 'panel_users';
+        $T_TRX      = $cfg['tables']['transactions']    ?? 'panel_transactions';
+        $T_RECEIPTS = $cfg['tables']['wallet_receipts'] ?? 'panel_wallet_receipts';
 
         $TYPE_PURCHASE = $cfg['transaction_types']['purchase'] ?? 'account_purchase';
         $TYPE_RENEWAL  = $cfg['transaction_types']['renewal']  ?? 'account_extend';
@@ -35,10 +35,7 @@ class DashboardPanelController extends Controller
         $pid  = (int)($me->id ?? 0);
         $code = (string)($me->code ?? '');
 
-        // همۀ محاسبات SQL در UTC
-        DB::statement("SET time_zone = '+00:00'");
-
-        // مرزبندی زمانی (به وقت تهران)
+        // ---- مرزبندی زمانی (بر اساس تهران) و تبدیل به UTC برای مقایسه SQL ----
         $nowTeh = Carbon::now($tz);
 
         $tStart  = $nowTeh->copy()->startOfDay()->utc();
@@ -53,14 +50,27 @@ class DashboardPanelController extends Controller
         $pmStart = $nowTeh->copy()->startOfMonth()->subMonthNoOverflow()->startOfMonth()->utc();
         $pmEnd   = $nowTeh->copy()->startOfMonth()->subSecond()->utc();
 
-        // هِلپرها
+        // ---- هِلپرها ----
         $pct = function (int|float $cur, int|float $prev): float {
             if ($prev == 0) return $cur > 0 ? 100.0 : 0.0;
             return round((($cur - $prev) / $prev) * 100, 2);
         };
 
-        $betweenTs = function ($q, Carbon $fromUtc, Carbon $toUtc) {
-            return $q->whereBetween(DB::raw('UNIX_TIMESTAMP(created_at)'), [$fromUtc->timestamp, $toUtc->timestamp]);
+        // ستون زمان ایجاد
+        $createdCol = 'created_at';
+        $colRef     = DB::getQueryGrammar()->wrap($createdCol);
+
+        // ساخت offset تهران به‌صورت داینامیک (DST-safe)
+        $offMin = Carbon::now($tz)->utcOffset(); // مثال: +210 برای +03:30
+        $sign   = $offMin >= 0 ? '+' : '-';
+        $hh     = str_pad(intval(abs($offMin) / 60), 2, '0', STR_PAD_LEFT);
+        $mm     = str_pad(abs($offMin) % 60, 2, '0', STR_PAD_LEFT);
+        $offStr = "{$sign}{$hh}:{$mm}"; // مانند +03:30
+
+        // مقایسه created_at با فرض "زمان تهران" → تبدیل صریح به UTC و سپس مقایسه با epoch
+        $betweenTs = function ($q, Carbon $fromUtc, $toUtc) use ($colRef, $offStr) {
+            $epochUtc = "TIMESTAMPDIFF(SECOND, '1970-01-01 00:00:00', CONVERT_TZ($colRef, '{$offStr}', '+00:00'))";
+            return $q->whereRaw("$epochUtc BETWEEN ? AND ?", [$fromUtc->timestamp, $toUtc->timestamp]);
         };
 
         // --- تراکنش‌ها (فقط مربوط به همین پنل) ---
@@ -72,7 +82,7 @@ class DashboardPanelController extends Controller
                     // اسکوپ: یا با id خود پنل، یا با code داخل متا
                     ->where(function ($q) use ($pid, $code) {
                         $q->where('panel_user_id', $pid)
-                        ->orWhereRaw("JSON_UNQUOTE(JSON_EXTRACT(meta,'$.panel_code')) = ?", [$code]);
+                          ->orWhereRaw("JSON_UNQUOTE(JSON_EXTRACT(meta,'$.panel_code')) = ?", [$code]);
                     })
                     ->tap(fn($q) => $betweenTs($q, $fromUtc, $toUtc))
                     ->sum(DB::raw("COALESCE(JSON_LENGTH(JSON_EXTRACT(meta,'$.user_ids')), quantity, 1)"));
@@ -82,7 +92,7 @@ class DashboardPanelController extends Controller
                     ->where('status', $STATUS_SUCCESS)
                     ->where(function ($q) use ($pid, $code) {
                         $q->where('panel_user_id', $pid)
-                        ->orWhereRaw("JSON_UNQUOTE(JSON_EXTRACT(meta,'$.panel_code')) = ?", [$code]);
+                          ->orWhereRaw("JSON_UNQUOTE(JSON_EXTRACT(meta,'$.panel_code')) = ?", [$code]);
                     })
                     ->tap(fn($q) => $betweenTs($q, $fromUtc, $toUtc))
                     ->count();
@@ -95,7 +105,7 @@ class DashboardPanelController extends Controller
                 ->where('status', $STATUS_SUCCESS)
                 ->where(function ($q) use ($pid, $code) {
                     $q->where('panel_user_id', $pid)
-                    ->orWhereRaw("JSON_UNQUOTE(JSON_EXTRACT(meta,'$.panel_code')) = ?", [$code]);
+                      ->orWhereRaw("JSON_UNQUOTE(JSON_EXTRACT(meta,'$.panel_code')) = ?", [$code]);
                 })
                 ->tap(fn($q) => $betweenTs($q, $fromUtc, $toUtc))
                 ->sum('amount');
