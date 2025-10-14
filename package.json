@@ -22,7 +22,7 @@
   "dependencies": {
     "@fontsource-variable/vazirmatn": "^5.2.6",
     "@fontsource/vazirmatn": "^5.2.6",
-    "@fortawesome/fontawesome-free": "^5.11.2",
+    "@fortawesome/fontawesome-free": "5.11.2",
     "dompurify": "^3.2.7",
     "moment-jalaali": "^0.10.4",
     "moment-timezone": "^0.6.0",
