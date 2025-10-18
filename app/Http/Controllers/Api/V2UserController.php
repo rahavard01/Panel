@@ -417,11 +417,9 @@ class V2UserController extends Controller
                 'expired_at' => $newExpTs,
                 'updated_at' => $nowTs,
                 'plan_id'    => $v2PlanId,
+                'u'          => 0,   // همیشه ریست شود
+                'd'          => 0,   // همیشه ریست شود
             ];
-            if ($shouldResetUsage) {
-                $update['u'] = 0;
-                $update['d'] = 0;
-            }
             if ($transferEnableBytes !== null) $update['transfer_enable'] = $transferEnableBytes;
             if ($v2Plan && isset($v2Plan->device_limit)) $update['device_limit'] = $v2Plan->device_limit;
             if ($v2Plan && isset($v2Plan->speed_limit))  $update['speed_limit']  = $v2Plan->speed_limit;
